@@ -1,0 +1,4 @@
+What is Multi-Sig wallets?
+
+A multi-signature wallets is a type of cryptocurrency wallet that requires more than one person to authorize transactions.
+

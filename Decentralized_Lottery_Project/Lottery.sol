@@ -13,7 +13,7 @@ contract Lottery{
     // receive is a special function which we can used for only one time in our smart-contract and it doesn't contain any arguments
     receive() external payable {
         require(msg.value == 2 ether, "The ether must be of 2 amount");  // Basically if this line is true then the second line execute.
-        participants.push(payable(msg.sender));
+        participants.push(payable(msg.sender)); // participants.push(payable(msg.sender)): After ensuring that the correct amount of Ether has been sent, this line adds the sender's address (msg.sender) to the participants array. The payable() function is used to explicitly convert msg.sender to a payable address. The participants array is declared as address payable[], which means it's an array of addresses that can receive Ether.
     }
 
     function getBalance() view public returns(uint){
