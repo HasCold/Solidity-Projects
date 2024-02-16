@@ -1,0 +1,7 @@
+Points to note :-
+
+1. Participant must have wallets.
+2. A participant can transfer ether more than one time but the transferred ether must be 2 ether.
+3. As the participant will transfer ether its address will be registered.
+4. Manager will have full control over the lottery.
+5. The contract will be reset once a round is completed.
