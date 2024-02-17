@@ -17,6 +17,7 @@ contract MultiSig{
 
     event TransactionSubmitted(uint transactionId, address sender, address receiver, uint amount);
     event TransactionConfirmed(uint transactionId);
+    event TransactionExecuted(uint transactionId);
 
     constructor(address[] memory _owners, uint _numConfirmationsRequired){
         require(_owners.length > 1, "Owner required must be greater than one");
@@ -48,7 +49,7 @@ contract MultiSig{
         }
 
         require(_isOwner, "Only Owner can perform this action");
-        _;  // Denote or Dash means if the _isOwner gets passed it will execute further operation.
+        _;
     }
 
     function confirmTransaction(uint _transactionId) public isOwner(msg.sender){
@@ -62,7 +63,9 @@ contract MultiSig{
         }
     }
 
-    function isTransactionConfirmed(uint _transactionId) view public returns(bool){
+    // The transaction is executed only when we have the minimum number of confirmation from the owners of the multiSig wallet
+
+    function isTransactionConfirmed(uint _transactionId) view internal returns(bool){
         require(_transactionId < transactions.length, "Invalid Transaction ID");
         uint confirmationCount; // Initially zero
 
@@ -74,7 +77,14 @@ contract MultiSig{
         return confirmationCount >= numConfirmationsRequired;
     }
 
-    function executeTransaction(uint _transactionId) public {
+    function executeTransaction(uint _transactionId) public payable {  // Transferring fund to a particular address
+        require(_transactionId < transactions.length, "Invalid Transaction ID");
+        require(!transactions[_transactionId].execute, "Transaction is already executed");
 
+        (bool ok,) = transactions[_transactionId].to.call{value: transactions[_transactionId].value}("");
+        require(ok, "Transaction Execution Failed");
+
+        transactions[_transactionId].execute = true;
+        emit TransactionExecuted(_transactionId);
     }
 }
